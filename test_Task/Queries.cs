@@ -20,6 +20,7 @@ namespace test_Task
             conn.Close();
             bufferTable.Clear();
             dataAdapter.Fill(bufferTable);
+
             if (bufferTable.Rows.Count == 1) return true;
             else return false;
         }
@@ -74,6 +75,7 @@ namespace test_Task
             amount = 1;
             string id = employeeID(chief, chiefTable);
             bufferTable = new DataTable();
+
             conn.Open();
             dataAdapter = new SQLiteDataAdapter($@"SELECT [fio],[eic],[chief],[rate] FROM [Managers] WHERE [chief] = '{id}' ", conn);
             bufferTable.Clear();
@@ -90,10 +92,11 @@ namespace test_Task
             dataAdapter.SelectCommand.CommandText = $@"SELECT [fio],[eic],[chief],[rate] FROM [Employees] WHERE [chief] = '{id}'";
             dataAdapter.Fill(bufferTable);
             roleAssign(3);
+
             return bufferTable;
         }
-        //Полчение списка сотрудников, которые могут быть начальниками (Менеджеров и Продавцов)
-        //TODO: разобраться со стаком
+        //Получение списка сотрудников, которые могут быть начальниками (Менеджеров и Продавцов)
+
         public DataTable getChiefEmployees(bool mode, string chief, string chiefTable)
         {
             amount = 1;
@@ -101,6 +104,7 @@ namespace test_Task
             if (!mode)
             {
                 string id = employeeID(chief, chiefTable);
+
                 conn.Open();
                 dataAdapter = new SQLiteDataAdapter($@"SELECT [fio] FROM [Managers] WHERE [chief] <> '{id}' AND [fio]<>'{chief}'", conn);
                 dataAdapter.SelectCommand.ExecuteNonQuery();
@@ -115,6 +119,7 @@ namespace test_Task
                 conn.Close();
                 dataAdapter.Fill(bufferTable);
                 roleAssign(2);
+
                 return bufferTable;
             }
             else
@@ -133,6 +138,7 @@ namespace test_Task
                 conn.Close();
                 dataAdapter.Fill(bufferTable);
                 roleAssign(2);
+
                 return bufferTable;
             }
             
@@ -142,11 +148,11 @@ namespace test_Task
         {
             string login = employeeID(fio, table);
             string pass = eic.Substring(6, eic.Length-6);
+
             conn.Open();
             command = new SQLiteCommand($"INSERT INTO [Login] ([ID],[Login],[Password]) VALUES (NULL,'{login}','{pass}')", conn);
             command.ExecuteNonQuery();
             conn.Close();
-
         }
         //Метод добавления столбца роли сотрудника в список сотрудников
         private void roleAssign(int step)
@@ -186,6 +192,7 @@ namespace test_Task
         {
             string table;
             string id;
+
             switch (role[0])
             {
                 case 'Р': table = "Employees"; break;
@@ -195,6 +202,7 @@ namespace test_Task
             }
             if (chief != " ") id = employeeID(chief, chiefTable);
             else id = null;
+
             conn.Open();
             if (table == "Employees") command = new SQLiteCommand($"UPDATE [{table}]SET [chief]= '{id}',[rate]= '{rate}' WHERE [fio] = '{fio}'", conn);
             else command = new SQLiteCommand($"UPDATE [{table}]SET [chief]= '{id}',[rate]= '{rate}' WHERE [fio] = '{fio}'", conn);
@@ -206,6 +214,7 @@ namespace test_Task
         {
             string table;
             bufferTable = new DataTable();
+
             if (id.Length != 0)
             {
                 switch (id[0])
@@ -215,11 +224,13 @@ namespace test_Task
                     case 'S': table = "Salesmen"; break;
                     default: return null;
                 }
+
                 conn.Open();
                 dataAdapter = new SQLiteDataAdapter($"SELECT [fio] FROM [{table}] WHERE [id] = '{id.Substring(1)}'", conn);
                 bufferTable.Clear();
                 dataAdapter.Fill(bufferTable);
                 conn.Close();
+
                 return bufferTable.Rows[0][0].ToString();
             }
             else return " ";
@@ -229,12 +240,15 @@ namespace test_Task
         {
             string id;
             bufferTable = new DataTable();
+
             conn.Open();
             dataAdapter = new SQLiteDataAdapter($@"SELECT [id] FROM [{table}] WHERE [fio] = '{fio}'", conn);
             conn.Close();
+
             bufferTable.Clear();
             dataAdapter.Fill(bufferTable);
             id = table[0] + bufferTable.Rows[0][0].ToString();
+
             return id;
         }
     }

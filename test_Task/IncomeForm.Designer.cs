@@ -86,7 +86,6 @@ namespace test_Task
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "IncomeForm";
             this.Text = "IncomeForm";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.IncomeForm_FormClosed);
             this.Load += new System.EventHandler(this.IncomeForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

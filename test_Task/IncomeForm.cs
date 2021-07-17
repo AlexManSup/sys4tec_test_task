@@ -28,7 +28,7 @@ namespace test_Task
                 this.Text = "Расчет зарплаты для всех сотдрудников";
                 q = new Queries();
                 allWorkers = q.getEmployees();
-                ids = new string[allWorkers.Rows.Count];
+                ids = new string[allWorkers.Rows.Count]; //Массив ID всех сотрудников
                 for (int i = 0; i < ids.Length; i++)
                 {
                     //Заполнение массива ID всех сотрудников
@@ -70,10 +70,7 @@ namespace test_Task
             }
         }
 
-        private void IncomeForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            
-        }
+
         //Расчет ЗП на актульную дату
         private void incomeToday_Click(object sender, EventArgs e)
         {

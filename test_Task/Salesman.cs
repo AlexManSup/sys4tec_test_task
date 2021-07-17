@@ -41,7 +41,6 @@ namespace test_Task
                 {
                     case "Работник":
                         {
-
                             string fio = subords.Rows[i]["Fio"].ToString();
                             string eic = subords.Rows[i]["Eic"].ToString();
                             string chief = subords.Rows[i]["Chief"].ToString();

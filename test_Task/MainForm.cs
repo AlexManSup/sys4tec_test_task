@@ -7,7 +7,6 @@ namespace test_Task
 {
     public partial class MainForm : Form
     {
-        AppContext context;
         public DataTable curRow;
         Queries q;
         public MainForm()
@@ -19,9 +18,9 @@ namespace test_Task
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            context = new AppContext();
-            curRow = q.getEmployees();
+            curRow = q.getEmployees(); //заполнение dataGridView
             EmployeesList.DataSource = curRow;
+            //форматирование столбцов
             EmployeesList.Columns["id"].Visible = false;
             EmployeesList.Columns["fio"].HeaderText = "ФИО";
             EmployeesList.Columns["fio"].Width = 190;
@@ -30,9 +29,11 @@ namespace test_Task
             EmployeesList.Columns["eic"].HeaderText = "Дата устройства";
             EmployeesList.Columns["role"].HeaderText = "Роль";
             EmployeesList.Columns["rate"].HeaderText = "Ставка";
+
             EmployeesList.CurrentCellChanged += new EventHandler(this.EmployeesList_CurrentCellChanged);
             chiefTrans();
         }
+        //Метод, преобразующий ID начальника в ФИО начальника
         private void chiefTrans()
         {
             for (int i = 0; i < EmployeesList.Rows.Count; i++)
@@ -41,29 +42,32 @@ namespace test_Task
                     EmployeesList.Rows[i].Cells["chief"].Value = q.getFio(EmployeesList.Rows[i].Cells["chief"].Value.ToString());
             }
         }
+        //Переход на форму добавления записи
         private void AddB_Click(object sender, EventArgs e)
         {
             Program.addWorker = new AddWorker(true);
             Program.addWorker.Show();
         }
+        //Метод получения выделенного ряда из таблицы, для переноса в форму изменения информации о записи
         public DataRow getRow()
         {
             DataTable transDT = curRow.Copy();
             return transDT.Select($"fio = '{EmployeesList.CurrentRow.Cells["fio"].Value}'")[0];
         }
-
+        //Переход на форму изменения информации о выбранной записи
         private void ModifyB_Click(object sender, EventArgs e)
         {
             Program.addWorker = new AddWorker(false);
             Program.addWorker.Show();
         }
+        //Обновление содержимого таблицы, после добавления/изменения/удаления записи
         public void UpdateTable()
         {
             curRow = q.getEmployees();
             EmployeesList.DataSource = curRow;
             chiefTrans();
         }
-
+        //Удаление записи
         private void DeleteB_Click(object sender, EventArgs e)
         {
             string fio = EmployeesList.CurrentRow.Cells["fio"].Value.ToString();
@@ -91,7 +95,7 @@ namespace test_Task
                 Program.mainForm.UpdateTable();
             }
         }
-
+        //Вызов формы просмотра подчиненных выбранного сотрудника
         private void checkSubordB_Click(object sender, EventArgs e)
         {
             string table;
@@ -102,10 +106,11 @@ namespace test_Task
                 case "Продавец": table = "Salesmen"; break;
                 default: table = null; break;
             }
+
             Subordinates newf = new Subordinates(false, EmployeesList.CurrentRow.Cells["fio"].Value.ToString(), table);
             newf.Show();
         }
-
+        //Проверка роли выбранного сотрудника, если это "Работник", то кнопка просмотра починенных становиться недоступной
         private void EmployeesList_CurrentCellChanged(object sender, EventArgs e)
         {
             if (EmployeesList.Rows.Count != 0 && EmployeesList.CurrentRow != null)
@@ -119,7 +124,7 @@ namespace test_Task
         {
             Application.Exit();
         }
-
+        //Переход на форму расчета ЗП для выбранного сотрудника
         private void incomeB_Click(object sender, EventArgs e)
         {
             string id;

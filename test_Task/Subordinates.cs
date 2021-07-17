@@ -5,10 +5,10 @@ namespace test_Task
 {
     public partial class Subordinates : Form
     {
-        string p;
-        bool m;
-        string t;
-        bool em;
+        string p;//ФИО сотрудника
+        bool m; //Переменная определяющая режим работы (просмотр списка возможных начальников или просмотр подчиненных сотрудника)
+        string t;//Таблица сотрудника
+        bool em;//Переменнная определяющая вывод списка начальников (все сотрудники в случае добавления нового сотрудника или только допустимые начальники в случае изменения записи)
         Queries q;
         public Subordinates(bool mode, string person, string table)
         {
@@ -30,6 +30,7 @@ namespace test_Task
 
         private void Subordinates_Load(object sender, EventArgs e)
         {
+            //Вывод списка возможных начальников
             if (m)
             {
                 switch (t)
@@ -39,15 +40,18 @@ namespace test_Task
                     case "Продавец": t = "Salesmen"; break;
                     default: t = null; break;
                 }
-                subord.DataSource = q.getChiefEmployees(em,p, t);
+                subord.DataSource = q.getChiefEmployees(em,p, t); //Получение списка возможных начальников
                 this.Text = "Выберите начальника";
                 if(!em)subord.Columns["id"].Visible = false;
+                //Форматирование формы и столбцов таблицы
                 subord.Columns["fio"].HeaderText = "ФИО";
                 subord.Columns["role"].HeaderText = "Роль";
             }
+            //Вывод списка подчиненных выбранного сотрудника
             else 
             {
-                subord.DataSource = q.getSubords(p,t);
+                subord.DataSource = q.getSubords(p,t);//Получение списка подчиненных сотрудника
+                //Форматирование формы и столбцов таблицы
                 this.Text = $"Подчиненные сотрудника {p}";
                 subord.Columns["fio"].HeaderText = "ФИО";
                 subord.Columns["eic"].HeaderText = "Дата устройства";
@@ -68,6 +72,7 @@ namespace test_Task
             Program.addWorker.chiefTable = chiefTable();
             Close();
         }
+        //Преобразование названия таблицы сотрудника
         private string chiefTable()
         {
             switch (subord.CurrentRow.Cells["role"].Value.ToString())
@@ -88,7 +93,7 @@ namespace test_Task
         {
             this.Hide();
         }
-
+        //Возврат на предыдущую форму, без определения начальника (для удаления информации о начальнике сотрудника)
         private void removeB_Click(object sender, EventArgs e)
         {
             Program.addWorker.Worker.Rows[0].Cells["chief"].Value = " ";

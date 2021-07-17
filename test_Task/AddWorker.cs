@@ -52,7 +52,6 @@ namespace test_Task
             Close();
         }
 
-
         private void ConfirmB_Click(object sender, EventArgs e)
         {
             //Добавление записи о сотрудники
@@ -100,7 +99,6 @@ namespace test_Task
                                 break;
                             }
                     }
-
                     Program.mainForm.UpdateTable();
                     Close();
                 }
@@ -153,7 +151,6 @@ namespace test_Task
                 }
                 else MessageBox.Show("Сначала заполните поля ФИО и Роль!");
             }
-            
         }
 
         private void Worker_DataError(object sender, DataGridViewDataErrorEventArgs e)
